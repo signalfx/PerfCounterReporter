@@ -1,0 +1,36 @@
+#!/bin/bash
+
+winpath() {
+   if [ -z "$1" ]; then
+       echo "$@"
+   else
+       if [ -f "$1" ]; then
+           local dir=$(dirname "$1")
+           local fn=$(basename "$1")
+           echo "$(cd "$dir"; echo "$(pwd -W)/$fn")" | sed 's|/|\\|g';
+       else
+           if [ -d "$1" ]; then
+               echo "$(cd "$1"; pwd -W)" | sed 's|/|\\|g';
+           else
+               echo "$1" | sed 's|^/\(.\)/|\1:\\|g; s|/|\\|g';
+           fi
+       fi
+   fi
+}
+
+RELEASE_VER=$1
+ZIP_DIR=PerfCounterReporter-${RELEASE_VER}
+WIN_ZIP_DIR=$(winpath $(pwd))\\${ZIP_DIR}
+ZIP_FILE=${WIN_ZIP_DIR}.zip
+
+# Get PerfTap stuff
+rm -rf PerfCounterReporter/bin
+/c/Program\ Files\ \(x86\)/MSBuild/12.0/Bin/MSBuild.exe  PerfCounterReporter.sln /property:Configuration=Release
+mkdir -p ${ZIP_DIR}/PerfCounterReporter
+cp -r PerfCounterReporter/bin/Release/{CounterDefinitions,Google.ProtocolBuffers.dll,Google.ProtocolBuffers.Serialization.dll,Metrics.dll,Metrics.Net.SignalFX.dll,NLog.config,NLog.dll,PerfCounterReporter.exe,PerfCounterReporter.exe.config} ${ZIP_DIR}/PerfCounterReporter/
+
+
+cp Install.ps1 ${ZIP_DIR} 
+
+cscript.exe zip.vbs ${WIN_ZIP_DIR} ${ZIP_FILE}
+rm -rf ${ZIP_DIR}
