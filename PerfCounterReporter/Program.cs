@@ -60,7 +60,7 @@ namespace PerfCounterReporter
             }
             catch (Exception ex)
             {
-                _log.FatalException(String.Format("An unhandled error occurred in the PerfTap Service on [{0}]",
+                _log.FatalException(String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
                 Environment.MachineName), ex);
                 throw;
             }
@@ -68,7 +68,7 @@ namespace PerfCounterReporter
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            _log.FatalException(String.Format("An unhandled error occurred in the PerfTap Service on [{0}]",
+            _log.FatalException(String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
             Environment.MachineName), e.ExceptionObject as Exception);
         }
         private static void PrintHelp(string action = null)
@@ -116,7 +116,7 @@ namespace PerfCounterReporter
 
         private static void PrintVersion()
         {
-            Console.WriteLine("PerfTap v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Console.WriteLine("PerfCounterReporter v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
         }
 
         private static void RunConsoleMode()
