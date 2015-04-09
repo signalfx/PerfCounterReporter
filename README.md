@@ -35,15 +35,15 @@ Or if readability is your thing:
 
 For hash values not supplied the following defaults are used. APIToken and SourceType are required.  
 
-* APIToken - Your SignalFuse API token. No default.
+* APIToken - Your SignalFx API token. No default.
 * SourceType - Configuration for what the "source" of metrics will be. No default. Value must be one of:
 	* netbios - use the netbios name of the server
 	* dns - use the DNS name of the server
 	* fqdn - use the FQDN name of the server
 	* custom - use a custom value. If the is specified then a SourceValue parameter must be specified.
-* DefaultDimensions - A hashtable of default dimensions to pass to SignalFuse. Default: Empty dictionary.
-* AwsIntegration - If set to "true" then AWS integration will be turned on for SignalFuse reporting. Default: false
-* SampleInterval - TimeSpan of how often to send metrics to SignalFuse. Default Value: 00:00:05
+* DefaultDimensions - A hashtable of default dimensions to pass to SignalFx. Default: Empty dictionary.
+* AwsIntegration - If set to "true" then AWS integration will be turned on for SignalFx reporting. Default: false
+* SampleInterval - TimeSpan of how often to send metrics to SignalFx. Default Value: 00:00:05
 * DefinitionPaths - List of file paths with counter definitions. Default Value: CounterDefinitions\system.counters
 * CounterNames - List of strings. Any additional "one off" counters to collect. Default Value: (empty list)
 
