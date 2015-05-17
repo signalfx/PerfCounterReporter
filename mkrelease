@@ -31,9 +31,9 @@ ZIP_FILE=${WIN_ZIP_DIR}.zip
 
 # Get PerfTap stuff
 rm -rf PerfCounterReporter/bin
-/c/Program\ Files\ \(x86\)/MSBuild/12.0/Bin/MSBuild.exe  PerfCounterReporter.sln /property:Configuration=Release
+/c/Program\ Files\ \(x86\)/MSBuild/12.0/Bin/MSBuild.exe  PerfCounterReporter.sln /property:Configuration=Release /property:Platform=x64
 mkdir -p ${ZIP_DIR}/PerfCounterReporter
-cp -r PerfCounterReporter/bin/Release/{CounterDefinitions,protobuf-net.dll,Metrics.dll,Metrics.Net.SignalFX.dll,NLog.config,NLog.dll,PerfCounterReporter.exe,PerfCounterReporter.exe.config} ${ZIP_DIR}/PerfCounterReporter/
+cp -r PerfCounterReporter/bin/x64/Release/{CounterDefinitions,protobuf-net.dll,Metrics.dll,Metrics.Net.SignalFX.dll,NLog.config,NLog.dll,PerfCounterReporter.exe,PerfCounterReporter.exe.config} ${ZIP_DIR}/PerfCounterReporter/
 
 
 cp Install.ps1 ${ZIP_DIR} 
