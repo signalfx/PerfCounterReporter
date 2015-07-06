@@ -1,6 +1,8 @@
-﻿using Metrics;
+﻿using Metrics.Reporters;
+using Metrics.SignalFx;
 using NLog;
 using PerfCounterReporter.Configuration;
+using System;
 using System.ServiceProcess;
 
 namespace PerfCounterReporter
@@ -19,8 +21,8 @@ namespace PerfCounterReporter
         {
 
             _log.Info("Reading signalFx reporter config");
-            Metric.Config.WithReporting(report => report.WithSignalFxFromAppConfig());
-            _pcr = new PerfCounterReporter(CounterSamplingConfiguration.FromConfig());
+            Tuple<MetricsReport, TimeSpan> reporter = SignalFxReporterBuilder.FromAppConfig().Build();
+            _pcr = new PerfCounterReporter(reporter.Item1, reporter.Item2, CounterSamplingConfiguration.FromConfig());
             _log.Info("Done reading config");
         }
 

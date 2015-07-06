@@ -10,6 +10,7 @@ namespace PerfCounterReporter.Interop
     public class PdhPathHandler : IDisposable
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly string[] NOT_FOUND = new string[0];
 
         private PdhSafeDataSourceHandle _safeDataSourceHandle;
 
@@ -42,11 +43,10 @@ namespace PerfCounterReporter.Interop
                 }
                 foreach (string expandedPath in expandedPaths)
                 {
-                    if (!IsPathValid(expandedPath))
+                    if (IsPathPresent(expandedPath))
                     {
-                        throw new Exception(string.Format(CultureInfo.CurrentCulture, ErrorMessages.CounterPathIsInvalid, new object[] { expandedPath }));
+                        yield return ParsePath(expandedPath);
                     }
-                    yield return ParsePath(expandedPath);
                 }
             }
         }
@@ -65,10 +65,19 @@ namespace PerfCounterReporter.Interop
             }
         }
 
-        private bool IsPathValid(string path)
+        private bool IsPathPresent(string path)
         {
-            return
-                (Interop.PdhValidatePathEx(this._safeDataSourceHandle, path) == 0);
+
+            uint resultCode = Interop.PdhValidatePathEx(this._safeDataSourceHandle, path);
+            if (resultCode == 0)
+            {
+                return true;
+            }
+            if (resultCode == PdhResults.PDH_CSTATUS_NO_OBJECT || resultCode == PdhResults.PDH_CSTATUS_NO_COUNTER || resultCode == PdhResults.PDH_CSTATUS_NO_INSTANCE)
+            {
+                return false;
+            }
+            throw new Exception(string.Format(CultureInfo.CurrentCulture, ErrorMessages.CounterPathIsInvalid, new object[] { path }));
         }
 
         private static PdhCounterPathElement ParsePath(string fullPath)
@@ -125,6 +134,9 @@ namespace PerfCounterReporter.Interop
                 {
                     Marshal.FreeHGlobal(expandedPathList);
                 }
+            } else if (resultCode == PdhResults.PDH_CSTATUS_NO_OBJECT || resultCode == PdhResults.PDH_CSTATUS_NO_COUNTER || resultCode == PdhResults.PDH_CSTATUS_NO_INSTANCE)
+            {
+                return NOT_FOUND;
             }
             return null;
         }
