@@ -29,8 +29,7 @@ namespace PerfCounterReporter.Interop
 
         }
 
-
-
+        
         public IEnumerable<PdhCounterPathElement> GetPathElements(IEnumerable<string> paths)
         {
             foreach (var path in paths)

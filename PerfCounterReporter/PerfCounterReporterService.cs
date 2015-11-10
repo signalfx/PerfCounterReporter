@@ -19,10 +19,17 @@ namespace PerfCounterReporter
 
         protected override void OnStart(string[] args)
         {
+            
 
             _log.Info("Reading signalFx reporter config");
             Tuple<MetricsReport, TimeSpan> reporter = SignalFxReporterBuilder.FromAppConfig().Build();
+            SyntheticCountersReporter synCR = SyntheticCountersReporter.createDefaultReporter(_log, CounterSamplingConfiguration.FromConfig());
             _pcr = new PerfCounterReporter(reporter.Item1, reporter.Item2, CounterSamplingConfiguration.FromConfig());
+            if (synCR != null)
+            {
+                _pcr._couunterReporters.Add(synCR);
+            }
+            
             _log.Info("Done reading config");
         }
 

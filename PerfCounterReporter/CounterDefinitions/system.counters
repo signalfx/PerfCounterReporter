@@ -81,3 +81,6 @@
 #“Network Interface\\Bytes Sent/sec”.  In some situations, you may wish to determine 
 #both inbound and outbound network traffic separately
 \Network Interface(*)\Bytes Total/sec
+
+\LogicalDisk(*)\Free Megabytes
+\LogicalDisk(*)\% Free Space
