@@ -18,7 +18,6 @@ winpath() {
    fi
 }
 
-#!/bin/bash
 # Read Password
 echo -n Code Signing Password: 
 read -s password
