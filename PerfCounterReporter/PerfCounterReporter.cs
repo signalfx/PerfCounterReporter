@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -33,6 +34,8 @@ namespace PerfCounterReporter
         private readonly Scheduler _reportScheduler;
         private readonly Scheduler _timerScheduler;
 
+        public readonly List<CounterReporter> _couunterReporters;
+
         public PerfCounterReporter(MetricsReport report, TimeSpan interval, ICounterSamplingConfiguration counterSamplingConfig)
         {
             _report = report;
@@ -42,6 +45,8 @@ namespace PerfCounterReporter
             _healthStatus = new HealthStatus();
             _timers = new ConcurrentDictionary<string, MetricInfo>();
             _currentMetrics = new Dictionary<string, MetricInfo>();
+
+            _couunterReporters = new List<CounterReporter>();
 
             this._reportScheduler = new ActionScheduler();
             this._reportScheduler.Start(interval, t => RunReport(t));
@@ -65,6 +70,12 @@ namespace PerfCounterReporter
                 .Union(_counterSamplingConfig.CounterNames.Select(name => name.Name.Trim()))
                 .Distinct(StringComparer.CurrentCultureIgnoreCase)
                 .ToList();
+
+            foreach (var reporter in _couunterReporters)
+            {
+                reporter.RunReport();
+            }
+            
             MetricsData metricsData = SetupMetricsData(counterPaths);
             _report.RunReport(metricsData, () => { return _healthStatus; }, t);
         }
@@ -175,11 +186,7 @@ namespace PerfCounterReporter
             string contextName = CleanName(pathElement.ObjectName);
             string metricName = CleanName(pathElement.CounterName);
             string instanceName = CleanName(pathElement.InstanceName);
-
-            PerformanceCounterType type = pathElement.InstanceName == null ?
-                   new PerformanceCounter(pathElement.ObjectName, pathElement.CounterName, true).CounterType :
-                   new PerformanceCounter(pathElement.ObjectName, pathElement.CounterName, pathElement.InstanceName, true).CounterType;
-
+                        
             MetricTags tags = default(MetricTags);
             if (instanceName != null)
             {
@@ -192,8 +199,10 @@ namespace PerfCounterReporter
                 existingMetrics.Remove(keyName);
                 return mInfo;
             }
-            PerfCounterGauge pcGauge = null;
+
+            PerfCounterGauge pcGauge = new PerfCounterGauge(pathElement.ObjectName, pathElement.CounterName, pathElement.InstanceName);
             TimerMetric timer = null;
+            PerformanceCounterType type = pcGauge.performanceCounter.CounterType;
             switch (type)
             {
                 //these types of counters are not usable
@@ -203,38 +212,11 @@ namespace PerfCounterReporter
                 case PerformanceCounterType.SampleBase:
                     _log.Error(String.Format("Don't know how to handle metric of type {0} for {1}", type.ToString(), metricName));
                     return null;
-                //record as simple key value pairs
-                case PerformanceCounterType.AverageCount64:
-                case PerformanceCounterType.CounterDelta32:
-                case PerformanceCounterType.CounterDelta64:
-                case PerformanceCounterType.CounterMultiTimer:
-                case PerformanceCounterType.CounterMultiTimer100Ns:
-                case PerformanceCounterType.CounterMultiTimer100NsInverse:
-                case PerformanceCounterType.CounterMultiTimerInverse:
-                case PerformanceCounterType.CounterTimer:
-                case PerformanceCounterType.CounterTimerInverse:
-                case PerformanceCounterType.CountPerTimeInterval32:
-                case PerformanceCounterType.CountPerTimeInterval64:
-                case PerformanceCounterType.NumberOfItems32:
-                case PerformanceCounterType.NumberOfItems64:
-                case PerformanceCounterType.NumberOfItemsHEX32:
-                case PerformanceCounterType.NumberOfItemsHEX64:
-                case PerformanceCounterType.RateOfCountsPerSecond32:
-                case PerformanceCounterType.RateOfCountsPerSecond64:
-                case PerformanceCounterType.RawFraction:
-                case PerformanceCounterType.SampleCounter:
-                case PerformanceCounterType.SampleFraction:
-                case PerformanceCounterType.Timer100Ns:
-                case PerformanceCounterType.Timer100NsInverse:
-                default:
-                    pcGauge = new PerfCounterGauge(pathElement.ObjectName, pathElement.CounterName, pathElement.InstanceName);
-                    break;
-
+                
                 //timers
                 case PerformanceCounterType.AverageTimer32:
                 case PerformanceCounterType.ElapsedTime:
                     timer = new TimerMetric(SamplingType.FavourRecent);
-                    pcGauge = new PerfCounterGauge(pathElement.ObjectName, pathElement.CounterName, pathElement.InstanceName);
                     break;
             }
             mInfo = new MetricInfo(contextName, metricName, tags, timer, pcGauge);
@@ -247,25 +229,25 @@ namespace PerfCounterReporter
 
         private string CleanName(string name)
         {
-            if (name != null)
+            if (name == null)
             {
-                var builder = new StringBuilder(150);
-                builder.Append(name.ToLower());
-                for (int i = 0; i < builder.Length; ++i)
-                {
-                    if (_badChars.Contains(builder[i])) { builder[i] = '_'; }
-                }
-                builder.Replace('\\', '.');
-                builder.Replace("#", "num");
-                builder.Replace("%", "pct");
-                if (builder[0] == '.')
-                {
-                    builder.Remove(0, 1);
-                    builder.Insert(0, "dot");
-                }
-                return Regex.Replace(builder.ToString(), "_+", "_");
+                return null;
             }
-            return null;
+
+            var builder = new StringBuilder(name.ToLower());
+            for (int i = 0; i < builder.Length; ++i)
+            {
+                if (_badChars.Contains(builder[i])) { builder[i] = '_'; }
+            }
+            builder.Replace('\\', '.');
+            builder.Replace("#", "num");
+            builder.Replace("%", "pct");
+            if (builder[0] == '.')
+            {
+                builder.Remove(0, 1);
+                builder.Insert(0, "dot");
+            }
+            return Regex.Replace(builder.ToString(), "_+", "_");
         }
 
         public void Dispose()

@@ -22,6 +22,24 @@ namespace PerfCounterReporter.Interop
         }
     }
 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public class MEMORYSTATUSEX
+    {
+        public uint dwLength;
+        public uint dwMemoryLoad;
+        public ulong ullTotalPhys;
+        public ulong ullAvailPhys;
+        public ulong ullTotalPageFile;
+        public ulong ullAvailPageFile;
+        public ulong ullTotalVirtual;
+        public ulong ullAvailVirtual;
+        public ulong ullAvailExtendedVirtual;
+        public MEMORYSTATUSEX()
+        {
+            this.dwLength = (uint)Marshal.SizeOf(typeof(MEMORYSTATUSEX));
+        }
+    }
+        
     internal class Interop
     {
         [DllImport("pdh.dll", CharSet = CharSet.Unicode)]
@@ -34,5 +52,8 @@ namespace PerfCounterReporter.Interop
         public static extern uint PdhValidatePathEx(PdhSafeDataSourceHandle hDataSource, string szFullPathBuffer);
         [DllImport("pdh.dll", CharSet = CharSet.Unicode)]
         public static extern uint PdhParseCounterPath(string szFullPathBuffer, IntPtr pCounterPathElements, ref IntPtr pdwBufferSize, uint dwFlags);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
     }
 }

@@ -7,7 +7,7 @@ namespace PerfCounterReporter
 
     public class PerfCounterGauge : MetricValueProvider<double>
     {
-        private readonly PerformanceCounter performanceCounter;
+        public readonly PerformanceCounter performanceCounter;
 
         public PerfCounterGauge(string category, string counter)
             : this(category, counter, instance: null)
