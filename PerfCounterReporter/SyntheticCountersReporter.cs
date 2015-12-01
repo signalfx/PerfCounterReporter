@@ -28,13 +28,13 @@ namespace PerfCounterReporter
         {
             string signalFxCategory = "SignalFX";
 
-            System.Diagnostics.CounterCreationDataCollection CounterDatas =
-                   new System.Diagnostics.CounterCreationDataCollection();
-
-            createCounterIfNotExist(signalFxCategory, "UsedMemory", "Total used memory", System.Diagnostics.PerformanceCounterType.NumberOfItems64, CounterDatas);
-
             try
             {
+                System.Diagnostics.CounterCreationDataCollection CounterDatas =
+                   new System.Diagnostics.CounterCreationDataCollection();
+
+                createCounterIfNotExist(signalFxCategory, "UsedMemory", "Total used memory", System.Diagnostics.PerformanceCounterType.NumberOfItems64, CounterDatas);
+
                 if (CounterDatas.Count != 0)
                 {
                     System.Diagnostics.PerformanceCounterCategory.Create(
@@ -101,7 +101,8 @@ namespace PerfCounterReporter
 
         private static void createCounterIfNotExist(string categoryName, string counterName, string counterHelp, System.Diagnostics.PerformanceCounterType type, System.Diagnostics.CounterCreationDataCollection counterDatas)
         {
-            if (!System.Diagnostics.PerformanceCounterCategory.CounterExists(counterName, categoryName))
+            if (!System.Diagnostics.PerformanceCounterCategory.Exists(categoryName) ||
+                !System.Diagnostics.PerformanceCounterCategory.CounterExists(counterName, categoryName))
             {
                 System.Diagnostics.CounterCreationData counter =
                    new System.Diagnostics.CounterCreationData();
