@@ -59,6 +59,9 @@
   <PropertyGroup>
     <PreBuildEvent>$(ProjectDir)patch_counter_configs.bat $(SolutionDir) $(ProjectDir)</PreBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>cscript $(ProjectDir)\fixExitDlg.js  !(TargetPath)</PostBuildEvent>
+  </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
 	Other similar extension points exist, see Wix.targets.

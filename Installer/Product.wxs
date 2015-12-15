@@ -14,12 +14,17 @@ after re-generating add:
            Version="1.0.0.0" 
            Manufacturer="SignalFx" 
            UpgradeCode="f25124eb-0654-4fe5-b5c9-2d1b8e1b8815">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" AdminImage="yes" />
 
+    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+    
     <Condition Message="You need to be an administrator to install this product.">Privileged</Condition>
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of !(bind.property.ProductName) is already installed." />
     <MediaTemplate EmbedCab="yes"/>
+
+    <WixVariable Id="WixUIDialogBmp" Value="res\dialog.bmp"/>
+    <WixVariable Id="WixUIBannerBmp" Value="res\banner.bmp"/>
 
     <UI Id="SfxWixUI_InstallDir">
       <UIRef Id="WixUI_InstallDir" />
@@ -32,8 +37,28 @@ after re-generating add:
                Order="2">LicenseAccepted = "1"</Publish>
 
       <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="OrgTokenDlg">1</Publish>
+    
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction" 
+               Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
     </UI>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch !(bind.property.ProductName)" />
+    <CustomAction Id="LaunchApplication"
+                  Directory="INSTALLFOLDER"
+                  Execute="immediate"
+                  ExeCommand="net start !(bind.property.ProductName)"
+                  Impersonate="yes"
+                  Return="asyncNoWait"/>
+    
+    <Property Id="AwsIntegrationString" Value="false"/>
+    <CustomAction Id="CheckAwsIntegration" Property="AwsIntegrationString" Value="true"></CustomAction>
+    <InstallExecuteSequence>
+      <Custom Action="CheckAwsIntegration" Before="InstallFiles">AWSINTEGRATION</Custom>
+    </InstallExecuteSequence>
 
     <Feature Id="ProductFeature" 
              Title="PerfCounterReporter" 
@@ -48,7 +73,7 @@ after re-generating add:
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="CompanyFolder" Name="SignalFx">
-          <Directory Id="INSTALLFOLDER" Name="PerfCounterReporter">
+          <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)">
             <Directory Id="COMPONENT_DIR"/>
           </Directory>
         </Directory>
@@ -86,7 +111,7 @@ after re-generating add:
               Vital="yes" />
       </Component>
 
-      <Component Id="Configure" Guid="a5240c0d-d742-43fe-b2d7-808129ebe52e">
+      <Component Id="ConfigureAPIToken" Guid="a5240c0d-d742-43fe-b2d7-808129ebe52e">
         <CreateFolder/>
         <util:XmlFile Id="SetApiToken"
                       File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
@@ -97,9 +122,21 @@ after re-generating add:
                       PreserveModifiedDate="yes"
                       ElementPath="//configuration/signalFxReporter[\[]@apiToken[\]]"/>
       </Component>
+
+      <Component Id="ConfigureAWSIntegration" Guid="A94806C8-8297-42B9-9AA7-C00E0190A012">
+        <CreateFolder/>
+        <util:XmlFile Id="SetAWSIntegration"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="awsIntegration"
+                      Value="[AwsIntegrationString]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@awsIntegration[\]]"/>
+      </Component>
       
       <Component Id="MainExecutable" Guid="a8c4dfc7-2f81-47b9-a6f7-f0cb3e0e5c84" >
-        <File Id="$(var.PerfCounterReporter.TargetFileName)"
+        <File Id="ServiceExe"
               Source="$(var.PerfCounterReporter.TargetPath)"
               DiskId="1" 
               KeyPath="yes"
@@ -115,8 +152,7 @@ after re-generating add:
                         Interactive="no"
                         Vital="yes">
         </ServiceInstall>
-        <ServiceControl Id="StartService" 
-                        Start="install" 
+        <ServiceControl Id="StartService"
                         Stop="both" 
                         Remove="uninstall" 
                         Name="PerfCounterReporterService" 

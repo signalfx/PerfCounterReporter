@@ -3,45 +3,41 @@
 	<Fragment>
     <UI>
 
+      <TextStyle Id="explanationFont" FaceName="Tahoma" Size="8" Italic="yes"/>
       <Dialog Id="OrgTokenDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
 
-        <Control Id="OrgTokenLabel" Type="Text" X="45" Y="73" Width="200" Height="15" TabSkip="no" Text="&amp;Organization token(Press Tab when done):" />
+        <Control Id="OrgTokenLabel" Type="Text" X="45" Y="73" Width="270" Height="15" TabSkip="no" Text="E&amp;nter the API token for your SignalFx organization(Press Tab when done):" />
+        <Control Id="OrgTokenExplanationLabel" Type="Text" X="45" Y="88" Width="270" Height="15" TabSkip="yes" Text="{\explanationFont}Find the API token for your organization on your SignalFx profile page." />
 
-        <Control Id="OrgTokenEdit" Type="Edit" X="45" Y="85" Width="220" Height="18" Property="ORGTOKEN" Text="{128}" />
+        <Control Id="OrgTokenEdit" Type="Edit" X="45" Y="103" Width="220" Height="18" Property="ORGTOKEN" Text="{128}" />
+
+        <Control Id="AWSIntegration" Type="CheckBox" X="45" Y="121" Width="200" Height="15" Property="AWSINTEGRATION" TabSkip="no" CheckBoxValue="0" Text="&amp;Enable AWS integration"/>
+        <Control Id="AWSIntegrationExplanationLabel" Type="Text" X="45" Y="136" Width="270" Height="30" TabSkip="yes" Text="{\explanationFont}Checking this box will allow SignalFx to sync metrics from this host with metadata from your Amazon Web Services account." />
         
         <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="&amp;Back">
-
           <Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
-
         </Control>
 
         <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="&amp;Next">
           <Condition Action="enable"><![CDATA[ORGTOKEN <> ""]]></Condition>
           <Condition Action="disable"><![CDATA[ORGTOKEN = ""]]></Condition>
           <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
-
         </Control>
 
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
-
           <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
-
         </Control>
 
         <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
 
         <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-
           <Text>Please enter your customer information</Text>
-
         </Control>
 
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
 
         <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-
           <Text>{\WixUI_Font_Title}Customer Information</Text>
-
         </Control>
 
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
