@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+File counter_configs.wxs generated with:
+heat.exe dir [PATH TO SOLUTION]\PerfCounterReporter\CounterDefinitions -template fragment -cg CounterConfigs -gg -sfrag -dr COMPONENT_DIR -var var.TargetDir -o [PATH TO SOLUTION]\Installer\counter_configs.wxs
+
+after re-generating add:
+<?define TargetDir = "$(var.PerfCounterReporter.TargetDir)\CounterDefinitions"?>
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Id="b950aa29-c95e-4abb-82f5-37e52bbfa653" 
+           Name="PerfCounterReporter" 
+           Language="1033"            
+           Version="1.0.0.0" 
+           Manufacturer="SignalFx" 
+           UpgradeCode="f25124eb-0654-4fe5-b5c9-2d1b8e1b8815">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" AdminImage="yes" />
+
+    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+    
+    <Condition Message="You need to be an administrator to install this product.">Privileged</Condition>
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of !(bind.property.ProductName) is already installed." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <WixVariable Id="WixUIDialogBmp" Value="res\dialog.bmp"/>
+    <WixVariable Id="WixUIBannerBmp" Value="res\banner.bmp"/>
+
+    <UI Id="SfxWixUI_InstallDir">
+      <UIRef Id="WixUI_InstallDir" />
+      <DialogRef Id="OrgTokenDlg" />
+
+      <Publish Dialog="LicenseAgreementDlg" 
+               Control="Next" 
+               Event="NewDialog" 
+               Value="OrgTokenDlg" 
+               Order="2">LicenseAccepted = "1"</Publish>
+
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="OrgTokenDlg">1</Publish>
+    
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction" 
+               Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch !(bind.property.ProductName)" />
+    <CustomAction Id="LaunchApplication"
+                  Directory="INSTALLFOLDER"
+                  Execute="immediate"
+                  ExeCommand="net start !(bind.property.ProductName)"
+                  Impersonate="yes"
+                  Return="asyncNoWait"/>
+    
+    <Property Id="AwsIntegrationString" Value="false"/>
+    <CustomAction Id="CheckAwsIntegration" Property="AwsIntegrationString" Value="true"></CustomAction>
+    <InstallExecuteSequence>
+      <Custom Action="CheckAwsIntegration" Before="InstallFiles">AWSINTEGRATION</Custom>
+    </InstallExecuteSequence>
+
+    <Feature Id="ProductFeature" 
+             Title="PerfCounterReporter" 
+             Description="Performace Counter Reporter"
+             Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="CounterConfigs"/>
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="CompanyFolder" Name="SignalFx">
+          <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)">
+            <Directory Id="COMPONENT_DIR"/>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <Component Id="Dlls" Guid="5eed432a-79ee-4c9f-b52e-dcff789748c2" KeyPath="yes">
+        <File Id="Metrics.dll"
+              Source="$(var.PerfCounterReporter.TargetDir)\Metrics.dll"
+              Vital="yes"/>        
+        <File Id="NLog.dll"
+              Source="$(var.PerfCounterReporter.TargetDir)\NLog.dll"
+              Vital="yes"/>
+        <File Id="protobuf_net.dll"
+              Source="$(var.PerfCounterReporter.TargetDir)\protobuf-net.dll"
+              Vital="yes"/>
+        <File Id="Metrics.NET.SignalFX.dll"
+              Source="$(var.PerfCounterReporter.TargetDir)\Metrics.NET.SignalFX.dll"
+              Vital="yes"/>
+      </Component>
+      
+      <Component Id="Configs" Guid="e598b2a7-d8ed-4b1f-ac2a-a411a9eb9203" KeyPath="yes">
+        <File Id="Metrics.xml"
+              Source="$(var.PerfCounterReporter.TargetDir)\Metrics.xml"
+              Vital="yes"/>
+        <File Id="NLog.config"
+              Source="$(var.PerfCounterReporter.TargetDir)\NLog.config"
+              Vital="yes"/>
+        <File Id="$(var.PerfCounterReporter.TargetFileName).config"
+              Source="$(var.PerfCounterReporter.TargetPath).config"
+              Vital="yes" />
+      </Component>
+
+      <Component Id="ConfigureAPIToken" Guid="a5240c0d-d742-43fe-b2d7-808129ebe52e">
+        <CreateFolder/>
+        <util:XmlFile Id="SetApiToken"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="apiToken"
+                      Value="[ORGTOKEN]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@apiToken[\]]"/>
+      </Component>
+
+      <Component Id="ConfigureAWSIntegration" Guid="A94806C8-8297-42B9-9AA7-C00E0190A012">
+        <CreateFolder/>
+        <util:XmlFile Id="SetAWSIntegration"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="awsIntegration"
+                      Value="[AwsIntegrationString]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@awsIntegration[\]]"/>
+      </Component>
+      
+      <Component Id="MainExecutable" Guid="a8c4dfc7-2f81-47b9-a6f7-f0cb3e0e5c84" >
+        <File Id="ServiceExe"
+              Source="$(var.PerfCounterReporter.TargetPath)"
+              DiskId="1" 
+              KeyPath="yes"
+              Vital="yes"/>
+        <ServiceInstall Id="ServiceInstaller" 
+                        Type="ownProcess"
+                        Name="PerfCounterReporterService"
+                        DisplayName="PerfCounterReporter"
+                        Description="Reports performance counters to SignalFx."
+                        Start="auto"
+                        Account="LocalSystem"
+                        ErrorControl="normal"
+                        Interactive="no"
+                        Vital="yes">
+        </ServiceInstall>
+        <ServiceControl Id="StartService"
+                        Stop="both" 
+                        Remove="uninstall" 
+                        Name="PerfCounterReporterService" 
+                        Wait="yes" />
+      </Component>
+      
+    </ComponentGroup>
+  </Fragment>
+</Wix>
