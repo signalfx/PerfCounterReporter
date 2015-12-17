@@ -25,6 +25,7 @@ after re-generating add:
 
     <WixVariable Id="WixUIDialogBmp" Value="res\dialog.bmp"/>
     <WixVariable Id="WixUIBannerBmp" Value="res\banner.bmp"/>
+    <WixVariable Id="WixUILicenseRtf" Value="res\license.rtf" />
 
     <UI Id="SfxWixUI_InstallDir">
       <UIRef Id="WixUI_InstallDir" />
