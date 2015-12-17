@@ -110,4 +110,5 @@ UpgradeLog*.XML
 
 *.zip
 
+*.snk
 counter_configs.wxs
