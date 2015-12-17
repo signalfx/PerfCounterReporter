@@ -33,7 +33,7 @@ namespace PerfCounterReporter
                 {
                     return this.performanceCounter != null ? this.performanceCounter.NextValue() : double.NaN;
                 }
-                catch (Exception _)
+                catch
                 {
                     return double.NaN;
                 }

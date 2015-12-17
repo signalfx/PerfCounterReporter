@@ -60,16 +60,16 @@ namespace PerfCounterReporter
             }
             catch (Exception ex)
             {
-                _log.FatalException(String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
-                Environment.MachineName), ex);
+                _log.Fatal(ex, String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
+                Environment.MachineName));
                 throw;
             }
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            _log.FatalException(String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
-            Environment.MachineName), e.ExceptionObject as Exception);
+            _log.Fatal(e.ExceptionObject as Exception, String.Format("An unhandled error occurred in the PerfCounterReporter Service on [{0}]",
+            Environment.MachineName));
         }
         private static void PrintHelp(string action = null)
         {

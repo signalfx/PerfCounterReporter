@@ -92,7 +92,7 @@ namespace PerfCounterReporter
                 {
                     minfo = RegisterMetric(pathElement, _currentMetrics);
                 }
-                catch (Exception e)
+                catch
                 {
                     continue;
                 }
