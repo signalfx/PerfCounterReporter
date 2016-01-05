@@ -87,6 +87,7 @@ Global
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|Mixed Platforms.Build.0 = Release|x86
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|x64.ActiveCfg = Release|x86
+		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|x64.Build.0 = Release|x86
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|x86.ActiveCfg = Release|x86
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release|x86.Build.0 = Release|x86
 		{83CD608C-2621-4F72-BBB7-754837AA3A42}.Release-64|Any CPU.ActiveCfg = Release|x86

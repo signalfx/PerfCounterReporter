@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 winpath() {
    if [ -z "$1" ]; then
@@ -28,8 +28,10 @@ ZIP_DIR=PerfCounterReporter-${RELEASE_VER}
 WIN_ZIP_DIR=$(winpath $(pwd))\\${ZIP_DIR}
 ZIP_FILE=${WIN_ZIP_DIR}.zip
 
-# Get PerfTap stuff
+# Get PerfCounterReporter stuff
 rm -rf PerfCounterReporter/bin
+rm -rf Installer/bin
+
 /c/Program\ Files\ \(x86\)/MSBuild/12.0/Bin/MSBuild.exe  PerfCounterReporter.sln /property:Configuration=Release /property:Platform=x64
 mkdir -p ${ZIP_DIR}/PerfCounterReporter
 cp -r PerfCounterReporter/bin/x64/Release/{CounterDefinitions,protobuf-net.dll,Metrics.dll,Metrics.Net.SignalFX.dll,NLog.config,NLog.dll,PerfCounterReporter.exe,PerfCounterReporter.exe.config} ${ZIP_DIR}/PerfCounterReporter/
@@ -38,6 +40,9 @@ cp -r PerfCounterReporter/bin/x64/Release/{CounterDefinitions,protobuf-net.dll,M
 cp Install.ps1 ${ZIP_DIR} 
 
 /C/Program\ Files\ \(x86\)/Windows\ Kits/8.1/bin/x64/signtool.exe sign -v -p $password -f "../SignalFx2.pfx" -t "http://timestamp.verisign.com/scripts/timestamp.dll" ${ZIP_DIR}/PerfCounterReporter/*.dll ${ZIP_DIR}/PerfCounterReporter/*.exe ${ZIP_DIR}/Install.ps1
+
+cp Installer/bin/Release/PerfCounterReporterInstaller.msi ./PerfCounterReporterInstaller-${RELEASE_VER}.msi
+/C/Program\ Files\ \(x86\)/Windows\ Kits/8.1/bin/x64/signtool.exe sign -v -p $password -f "../SignalFx2.pfx" -t "http://timestamp.verisign.com/scripts/timestamp.dll" ./PerfCounterReporterInstaller-${RELEASE_VER}.msi
 
 cscript.exe zip.vbs ${WIN_ZIP_DIR} ${ZIP_FILE}
 rm -rf ${ZIP_DIR}
