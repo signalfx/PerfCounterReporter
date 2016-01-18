@@ -16,8 +16,6 @@ after re-generating add:
            UpgradeCode="f25124eb-0654-4fe5-b5c9-2d1b8e1b8815">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" AdminImage="yes" />
 
-    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
-    
     <Condition Message="You need to be an administrator to install this product.">Privileged</Condition>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of !(bind.property.ProductName) is already installed." />
@@ -39,21 +37,8 @@ after re-generating add:
 
       <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="OrgTokenDlg">1</Publish>
     
-      <Publish Dialog="ExitDialog"
-               Control="Finish"
-               Event="DoAction" 
-               Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
     </UI>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch !(bind.property.ProductName)" />
-    <CustomAction Id="LaunchApplication"
-                  Directory="INSTALLFOLDER"
-                  Execute="immediate"
-                  ExeCommand="net start !(bind.property.ProductName)"
-                  Impersonate="yes"
-                  Return="asyncNoWait"/>
     
     <Property Id="AwsIntegrationString" Value="false"/>
     <CustomAction Id="CheckAwsIntegration" Property="AwsIntegrationString" Value="true"></CustomAction>
@@ -154,6 +139,7 @@ after re-generating add:
                         Vital="yes">
         </ServiceInstall>
         <ServiceControl Id="StartService"
+                        Start="install"
                         Stop="both" 
                         Remove="uninstall" 
                         Name="PerfCounterReporterService" 
