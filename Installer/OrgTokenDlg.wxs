@@ -6,7 +6,7 @@
       <TextStyle Id="explanationFont" FaceName="Tahoma" Size="8" Italic="yes"/>
       <Dialog Id="OrgTokenDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
 
-        <Control Id="OrgTokenLabel" Type="Text" X="45" Y="73" Width="270" Height="15" TabSkip="no" Text="E&amp;nter the API token for your SignalFx organization(Press Tab when done):" />
+        <Control Id="OrgTokenLabel" Type="Text" X="45" Y="73" Width="270" Height="15" TabSkip="no" Text="E&amp;nter the API token for your SignalFx organization:" />
         <Control Id="OrgTokenExplanationLabel" Type="Text" X="45" Y="88" Width="270" Height="15" TabSkip="yes" Text="{\explanationFont}Find the API token for your organization on your SignalFx profile page." />
 
         <Control Id="OrgTokenEdit" Type="Edit" X="45" Y="103" Width="220" Height="18" Property="ORGTOKEN" Text="{128}" />
@@ -19,9 +19,8 @@
         </Control>
 
         <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="&amp;Next">
-          <Condition Action="enable"><![CDATA[ORGTOKEN <> ""]]></Condition>
-          <Condition Action="disable"><![CDATA[ORGTOKEN = ""]]></Condition>
-          <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+          <Publish Event="DoAction" Value="OrgTokenWarning"><![CDATA[Not (ORGTOKEN <> "")]]></Publish>
+          <Publish Event="NewDialog" Value="InstallDirDlg"><![CDATA[ORGTOKEN <> ""]]></Publish>
         </Control>
 
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">

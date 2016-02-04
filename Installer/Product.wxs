@@ -40,6 +40,19 @@ after re-generating add:
     </UI>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     
+    <CustomAction Id="OrgTokenWarning" Script="vbscript">
+      <![CDATA[
+      Dim text
+      Dim rec
+      
+      text = "Please provide API token. Find the API token for your organization on your SignalFx profile page."
+      Set rec = Session.Installer.CreateRecord(1)
+      rec.StringData(0) = text
+
+      Session.Message &H02000000, rec
+      ]]>
+    </CustomAction>
+    
     <Property Id="AwsIntegrationString" Value="false"/>
     <CustomAction Id="CheckAwsIntegration" Property="AwsIntegrationString" Value="true"></CustomAction>
     <InstallExecuteSequence>
