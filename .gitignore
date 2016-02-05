@@ -109,6 +109,8 @@ Backup*/
 UpgradeLog*.XML
 
 *.zip
+*.msi
 
 *.snk
 counter_configs.wxs
+*.publickey
