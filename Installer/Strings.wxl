@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="WelcomeDlgDescription">The Setup Wizard will install PerfCounterReporter on your computer. This installation requires Microsoft .NET 4.5 or greater. Click Next to continue or Cancel to exit the Setup Wizard.</String>
+</WixLocalization>
