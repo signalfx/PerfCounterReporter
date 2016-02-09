@@ -41,7 +41,7 @@ cp Install.ps1 ${ZIP_DIR}
 
 /C/Program\ Files\ \(x86\)/Windows\ Kits/8.1/bin/x64/signtool.exe sign -v -p $password -f "../SignalFx2.pfx" -t "http://timestamp.verisign.com/scripts/timestamp.dll" ${ZIP_DIR}/PerfCounterReporter/*.dll ${ZIP_DIR}/PerfCounterReporter/*.exe ${ZIP_DIR}/Install.ps1
 
-cp Installer/bin/Release/PerfCounterReporterInstaller.msi ./PerfCounterReporterInstaller-${RELEASE_VER}.msi
+cp Installer/bin/Release/en-us/PerfCounterReporterInstaller.msi ./PerfCounterReporterInstaller-${RELEASE_VER}.msi
 /C/Program\ Files\ \(x86\)/Windows\ Kits/8.1/bin/x64/signtool.exe sign -v -p $password -f "../SignalFx2.pfx" -t "http://timestamp.verisign.com/scripts/timestamp.dll" ./PerfCounterReporterInstaller-${RELEASE_VER}.msi
 
 cscript.exe zip.vbs ${WIN_ZIP_DIR} ${ZIP_FILE}
