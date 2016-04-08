@@ -22,7 +22,7 @@ namespace PerfCounterReporter
             
 
             _log.Info("Reading signalFx reporter config");
-            Tuple<MetricsReport, TimeSpan> reporter = SignalFxReporterBuilder.FromAppConfig().Build();
+            Tuple<MetricsReport, TimeSpan> reporter = SignalFxReporterBuilder.FromAppConfig();
             SyntheticCountersReporter synCR = SyntheticCountersReporter.createDefaultReporter(_log, CounterSamplingConfiguration.FromConfig());
             _pcr = new PerfCounterReporter(reporter.Item1, reporter.Item2, CounterSamplingConfiguration.FromConfig());
             if (synCR != null)
