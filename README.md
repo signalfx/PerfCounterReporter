@@ -7,10 +7,9 @@ This code is based on/inspired by PerfTap (https://github.com/Iristyle/PerfTap) 
 
 * .NET Framework 4+
 * Windows
-* Admin rights for installing services (the service is setup to run as NETWORK SERVICE)
+* Admin rights for installing services (the service is setup to run as LOCAL SERVICE)
 * Powershell v2 required to user the one-line installer
 
-Sorry Mono, this is the Win32 only club -- besides, Linux distros already have better tools for this!
 ### Installation
 Download the latest release from https://github.com/signalfx/PerfCounterReporter/releases and unzip it.
 
@@ -50,7 +49,7 @@ For hash values not supplied the following defaults are used. APIToken and Sourc
 ### Configuration
 
 The PerfCounterReporter.config file controls what counters are enabled, how often they're sampled  Paths may be absolute, relative to the current working directory of the application, or relative to the current directory of where the binaries are installed.
-It also controls the configuration of how to send metrics to SignalFX (TODO fix this so it is not only SignalFx reporting)
+It also controls the configuration of how to send metrics to SignalFx.
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
