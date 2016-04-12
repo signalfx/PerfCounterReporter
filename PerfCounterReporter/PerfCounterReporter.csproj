@@ -126,7 +126,7 @@
       <HintPath>..\packages\Metrics.NET.0.2.16\lib\net45\Metrics.dll</HintPath>
     </Reference>
     <Reference Include="Metrics.NET.SignalFX">
-      <HintPath>..\packages\Metrics.NET.SignalFX.2.2.0.0\lib\net45\Metrics.NET.SignalFX.dll</HintPath>
+      <HintPath>..\packages\Metrics.NET.SignalFX.2.2.1.0\lib\net45\Metrics.NET.SignalFX.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
