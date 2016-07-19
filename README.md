@@ -21,22 +21,55 @@ After clicking "Finish" to complete the installation, the host will immediately 
 
 ### Configuration
 
-If at any time you would like to change you API token or any of the other configuration settings you will need to edit the PerfCounterReporter.exe.config file to do so. It controls what performance counters are enabled and how often they are sampled. Paths to these counters may be absolute, relative to the current working directory of the application, or relative to the current directory of where the binaries are installed. This file also controls the configuration of how to report metrics to SignalFx.
+The file `PerfCounterReporter.exe.config` controls the configuration of PerfCounterReporter. If you installed this tool using the .MSI installer, it is not necessary to directly modify this file. 
 
-* APIToken - Your SignalFx API token. No default.
-* SourceType - Configuration for what the "source" of metrics will be. No default. Value must be one of:
-	* netbios - use the netbios name of the server
-	* dns - use the DNS name of the server
-	* fqdn - use the FQDN name of the server
-	* custom - use a custom value. If the is specified then a SourceValue parameter must be specified.
-* DefaultDimensions - A hashtable of default dimensions to pass to SignalFx. Default: (Empty dictionary).
-* AwsIntegration - If set to "true" then AWS integration will be turned on for SignalFx reporting. Default Value: false
-* SampleInterval - TimeSpan of how often to send metrics to SignalFx. Default Value: 00:00:05
-* DefinitionPaths - List of file paths with counter definitions. Default Value: CounterDefinitions\system.counters
-* CounterNames - List of strings. Any additional "one off" counters to collect. Default Value: (empty list)
+`PerfCounterReporter.exe.config` controls what performance counters are enabled and how often they are sampled. Paths to these counters may be absolute, relative to the current working directory of the application, or relative to the current directory of where the binaries are installed. This file also controls the configuration of how to report metrics to SignalFx.
 
+The `signalFxReporter` block includes the following options: 
 
-#### Counter Definitions available out of the box
+| Setting            | Description     | Default  |
+|--------------------|----------------------------|----------|
+| APIToken | Your SignalFx API token. | No default. |
+| SourceType | Configuration for what the "source" of metrics will be. Value must be one of `netbios` (use the netbios name of the server), `dns` (use the DNS name of the server), `fqdn` (use the FQDN name of the server), or `custom` (use a custom value specified in a parameter `SourceValue`.) | No default. |
+| DefaultDimensions | A hashtable of default dimensions to pass to SignalFx | Empty dictionary |
+| AwsIntegration | If set to "true" then AWS metadata will accompany metrics. | false |
+| SampleInterval | Controls the interval at which to send metrics to SignalFx, as hh:mm:ss. | 00:00:05 |
+
+**Example:** 
+
+```
+<signalFxReporter apiToken="<yourtoken>" sampleInterval="00:00:05" sourceType="netbios"/>
+```
+
+The `counterSampling` block includes the following options:
+
+| Setting            | Description     | Default  |
+|--------------------|----------------------------|----------|
+| definitionFilePaths | List of file paths with counter definitions (see [Selecting counter sets](#selecting-counter-sets) below) |  CounterDefinitions\system.counters |
+| counterNames | Names of indiviual counters to collect (see [Extra counter definitions](#extra-counter-definitions) below) | No default. |
+
+**Example:** 
+
+```
+<counterSampling>
+  <definitionFilePaths>
+    <definitionFile path="CounterDefinitions\\system.counters" />
+    <!-- <definitionFile path="CounterDefinitions\\aspnet.counters" /> -->
+    <!-- <definitionFile path="CounterDefinitions\\dotnet.counters" /> -->
+    <!-- <definitionFile path="CounterDefinitions\\sqlserver.counters" /> -->
+    <!-- <definitionFile path="CounterDefinitions\\webservice.counters" /> -->
+  </definitionFilePaths>
+  <!--
+  <counterNames>
+    <counter name="\network interface(*)\bytes total/sec" />
+  </counterNames>
+  -->
+</counterSampling>
+```
+
+#### Selecting counter sets
+
+Counter files (`*.counter`) define the metrics that PerfCounterReporter will collect. The following counter sets accompany this tool. Enable them by adding entries to `definitionFilePaths` in `PerfCounterReporter.exe.config`: 
 
 <table>
 <thead><tr><td>File</td><td>Purpose</td></tr></thead>
