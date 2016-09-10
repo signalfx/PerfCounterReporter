@@ -1,8 +1,27 @@
-#\web service(_total)\bytes total/sec
-\web service(*)\bytes total/sec
-#\web service(_total)\total method requests/sec 
-\web service(*)\total method requests/sec 
-#\web service(_total)\isapi extension requests/sec
-\web service(*)\isapi extension requests/sec
-#\web service(_total)\current connections
+## Connections
+# Number of current connections to the web service
 \web service(*)\current connections
+
+# Rate that connections to web service are attempted
+\web service(*)\connection attempts/sec
+
+## Requests
+# Rate of HTTP POST requests
+\web service(*)\post requests/sec
+
+# Rate of HTTP GET requests
+\web service(*)\get requests/sec
+
+# Rate at which all HTTP requests are received
+\web service(*)\total method requests/sec
+
+## Bytes Transferred
+
+# Rate that data is received by web service
+\web service(*)\bytes received/sec
+
+# Rate that data is sent by web service
+\web service(*)\bytes sent/sec
+
+# Sum of 2 counters above
+\web service(*)\bytes total/sec
