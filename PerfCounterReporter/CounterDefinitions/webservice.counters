@@ -23,5 +23,33 @@
 # Rate that data is sent by web service
 \web service(*)\bytes sent/sec
 
-# Sum of 2 counters above
-\web service(*)\bytes total/sec
+## Files Transferred
+
+# Rate at which files are received by web service
+\web service(*)\files received/sec
+
+# Rate at which files are sent by web service
+\web service(*)\files sent/sec
+
+## Not Found Errors
+
+# Rate of 'Not Found' Errors
+\web service(*)\not found errors/sec
+
+## Users
+
+# Rate at which users are making anonymous requests to the web service
+\web service(*)\anonymous users/sec
+
+# Rate at which users are making nonanonymous requests to the web service
+\web service(*)\nonanonymous users/sec
+
+## Uptime
+
+# Service uptime
+# \web service(*)\service uptime
+
+## ISAPI requests
+
+# Rate of ISAPI extension request processed simultaneously by the web service
+# \web service(*)\isapi extension requests/sec
