@@ -16,6 +16,14 @@
 #< 8 is better, < 4 is best
 \System\Processor Queue Length
 
+# This is the number of system calls being serviced by the CPU per second.
+# By comparing the Processor’s Interrupts/sec with the System Calls/sec we can
+# get a picture of how much effort the system requires to respond to attached hardware.
+# On a healthy system, the Interrupts per second should be negligible in comparison to
+# the number of System Calls per second. When the system has to repeatedly call
+# interrupts for service, it’s indicative of a hardware failure.
+\System\System Calls/sec
+
 #Number of execution contexts switched in the last second, where >6000 is poor, 
 #<3000 is good, and <1500 is excellent.
 \System\Context Switches/sec
@@ -29,7 +37,7 @@
 #processor utilization. In this case you can drill down and maybe find the culprit 
 #by examining the Process(instance)\% Processor Time counter for each process 
 #instances running on your machine. 
-#\Processor(_Total)\Interrupts/sec
+\Processor(_Total)\Interrupts/sec
 #\Processor(*)\Interrupts/sec
 
 #If Processor(_Total)\Interrupts/sec does not correlate well with 

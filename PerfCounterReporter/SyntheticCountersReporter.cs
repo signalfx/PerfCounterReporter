@@ -59,7 +59,7 @@ namespace PerfCounterReporter
                 .SelectMany(path => CounterFileParser.ReadCountersFromFile(path.Path))
                 .Union(_counterSamplingConfig.CounterNames.Select(name => name.Name.Trim()))
                 .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                .Where(path => Regex.Match(path, @".*SignalFX.*").Success)
+                .Where(path => Regex.Match(path, @"^.\SignalFX*").Success)
                 .ToList();
 
             updateSyntheticCounters(counterPaths);
