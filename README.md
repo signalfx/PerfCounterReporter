@@ -30,7 +30,7 @@ The `signalFxReporter` block includes the following options:
 | Setting            | Description     | Default  |
 |--------------------|----------------------------|----------|
 | APIToken | Your SignalFx API token. | No default. |
-| SourceType | Configuration for what the "source" of metrics will be. Value must be one of `netbios` (use the netbios name of the server), `dns` (use the DNS name of the server), `fqdn` (use the FQDN name of the server), or `custom` (use a custom value specified in a parameter `SourceValue`.) | No default. |
+| SourceType | Configuration for what the "source" of metrics will be. Value must be one of `netbios` (use the netbios name of the server), `dns` (use the DNS name of the server), `fqdn` (use the FQDN name of the server), or `custom` (use a custom value specified in a parameter `SourceValue`.) | netbios |
 | DefaultDimensions | A hashtable of default dimensions to pass to SignalFx | Empty dictionary |
 | AwsIntegration | If set to "true" then AWS metadata will accompany metrics. | false |
 | SampleInterval | Controls the interval at which to send metrics to SignalFx, as hh:mm:ss. | 00:00:05 |
