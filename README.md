@@ -101,6 +101,42 @@ One-off counters may be added to the configuration file as shown in the example 
 
 The names of all counters are combined together from all the configured files and individually specified names.  However, these names have not yet been wildcard expanded.  So, if for instance, both the name "\processor(*)\% processor time" and "\processor(_total)\% processor time" have been specified, "\processor(_total)\% processor time" will be read twice.
 
+#### Configuration via Command Line Parameters / Non-interactive Installs
+
+The PerfCounterReporter .MSI supports parameters being passed into it at the command line. This is particularly useful when you are looking to do non-interactive deployment and configuration operations involving it via msiexec (or your tool of choice).
+
+The following command line parameters are supported:
+  
+| Parameter            | Description     | Default  |
+|--------------------|----------------------------|----------|
+| APITOKEN | Your SignalFx API token | No default |
+| SOURCETYPE | Configuration for what the "source" of metrics will be. Value must be one of `netbios` (use the netbios name of the host), `dns` (use the DNS name of the hst), `fqdn` (use the FQDN name of the host), or `custom` (use a custom value specified in a parameter SOURCEVALUE) | netbios |
+| SOURCEVALUE | A string indicating the custom name describing the source of the metrics. This value is only used if `custom` is specified as the value for SOURCETYPE | No default |
+| AWSINT | If set to "true" then AWS metadata will accompany metrics. Only specify a value of "true" if the host is running in AWS | false |
+| SAMPLEINTERVAL | Controls the interval at which to send metrics to SignalFx from this host, as hh:mm:ss. | 00:00:05 |
+| DIMENSIONNAME | String indicating the name of an optional dimension that you want to add to the metrics that are being sent from this host to SignalFx | No default |
+| DIMENSIONVALUE | String indicating the value for the dimension specified in the DIMENSIONNAME parameter that you want to add to the metrics that are being sent from this host to SignalFx | No default |
+
+NOTE #1: The above parameter names are case-sensitive and must be entered in all CAPS per the requirements that Windows places on an installer's public properties.
+
+NOTE #2: Only the name and value for one dimension can be passed in via the command line at this time. If you wish to add more than one dimension you must make the appropriate modifications to your `PerfCounterReporter.exe.config` file as noted above.
+
+**Example usage:** 
+
+To perform a non-interactive install of PerfCounterReporter v1.5.0 on a host where you don't want AWS metadata reported, where you want the source name to be a custom value called "TestMachine", where you want the reporting frequency of metrics to be every minute, and where you want metrics from the host to include a dimension of "Data Center" with the value of "East Coast", you would issue the following command:
+
+```
+msiexec /i PerfCounterReporterInstaller-1.5.0.msi /passive APITOKEN="MyOrgsApiToken" AWSINT="false" SOURCETYPE="custom" SOURCEVALUE="TestMachine" SAMPLEINTERVAL="00:01:00" DIMENSIONNAME="Data Center" DIMENSIONVALUE="East Coast"
+```
+
+To perform a non-interactive uninstall of PerfCounterReporter v1.5.0, issue the following command on the host where it is already installed and where the .MSI binary is present:
+
+```
+msiexec /x PerfCounterReporterInstaller-1.5.0.msi /passive
+```
+
+NOTE: Any combination of the above command line parameters can also be passed when running the PerfCounterReporter Installer interactively. This eliminates the need to edit the `PerfCounterReporter.exe.config` file post-install to configure the reporting interval or other such configuration options that are not currently prompted for in the installer's UI.
+
 ### Logging
 
 NLog is used for logging, and the default configuration ships with just file logging enabled.  The logs are placed in %ALLUSERSPROFILE%\PerfCounterReporter\logs.  Generally speaking, on modern Windows installations this will be the C:\ProgramData\PerfCounterReporter\logs directory. This can be changed per the NLog [documentation](http://nlog-project.org/wiki/Configuration_File).
