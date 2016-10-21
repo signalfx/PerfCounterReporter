@@ -11,7 +11,7 @@ after re-generating add:
   <Product Id="b950aa29-c95e-4abb-82f5-37e52bbfa653" 
            Name="PerfCounterReporter" 
            Language="1033"            
-           Version="1.0.0.0" 
+           Version="1.5.0.0" 
            Manufacturer="SignalFx" 
            UpgradeCode="f25124eb-0654-4fe5-b5c9-2d1b8e1b8815">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" AdminImage="yes" />
@@ -34,15 +34,16 @@ after re-generating add:
       <UIRef Id="WixUI_InstallDir" />
       <DialogRef Id="OrgTokenDlg" />
 
-      <Publish Dialog="LicenseAgreementDlg" 
-               Control="Next" 
-               Event="NewDialog" 
-               Value="OrgTokenDlg" 
+      <Publish Dialog="LicenseAgreementDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="OrgTokenDlg"
                Order="2">LicenseAccepted = "1"</Publish>
 
       <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="OrgTokenDlg">1</Publish>
-    
+
     </UI>
+    
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     
     <CustomAction Id="OrgTokenWarning" Script="vbscript">
@@ -57,16 +58,23 @@ after re-generating add:
       Session.Message &H02000000, rec
       ]]>
     </CustomAction>
+       
+    <Property Id="APITOKEN"/>
+    <Property Id="AWSINT" Value="false"/>
+    <Property Id="SOURCETYPE" Value="netbios"/>
+    <Property Id="SOURCEVALUE"/>
+    <Property Id="SAMPLEINTERVAL" Value="00:00:05"/>
+    <Property Id="DIMENSIONNAME"/>
+    <Property Id="DIMENSIONVALUE"/>
     
-    <Property Id="AwsIntegrationString" Value="false"/>
-    <CustomAction Id="CheckAwsIntegration" Property="AwsIntegrationString" Value="true"></CustomAction>
+    <CustomAction Id="CheckAwsIntegration" Property="AWSINT" Value="true"></CustomAction>
     <InstallExecuteSequence>
       <Custom Action="CheckAwsIntegration" Before="InstallFiles">AWSINTEGRATION</Custom>
     </InstallExecuteSequence>
 
     <Feature Id="ProductFeature" 
              Title="PerfCounterReporter" 
-             Description="Performace Counter Reporter"
+             Description="Performance Counter Reporter"
              Level="1">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="CounterConfigs"/>
@@ -122,7 +130,7 @@ after re-generating add:
                       Action="setValue"
                       SelectionLanguage="XPath"
                       Name="apiToken"
-                      Value="[ORGTOKEN]"
+                      Value="[APITOKEN]"
                       PreserveModifiedDate="yes"
                       ElementPath="//configuration/signalFxReporter[\[]@apiToken[\]]"/>
       </Component>
@@ -134,11 +142,71 @@ after re-generating add:
                       Action="setValue"
                       SelectionLanguage="XPath"
                       Name="awsIntegration"
-                      Value="[AwsIntegrationString]"
+                      Value="[AWSINT]"
                       PreserveModifiedDate="yes"
                       ElementPath="//configuration/signalFxReporter[\[]@awsIntegration[\]]"/>
       </Component>
+
+      <Component Id="ConfigureSourceType" Guid="D93846E8-4997-32C9-7BA7-B02E3195A014">
+        <CreateFolder/>
+        <util:XmlFile Id="SetSourceType"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="sourceType"
+                      Value="[SOURCETYPE]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@sourceType[\]]"/>
+      </Component>
+
+      <Component Id="ConfigureSourceValue" Guid="C88819E4-322A-421D-6347-D11F3195A329">
+        <CreateFolder/>
+        <util:XmlFile Id="SetSourceValue"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="sourceValue"
+                      Value="[SOURCEVALUE]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@sourceValue[\]]"/>
+      </Component>
+
+      <Component Id="ConfigureSampleInterval" Guid="C41113D8-5427-22D9-5FE7-A35E3195D013">
+        <CreateFolder/>
+        <util:XmlFile Id="SetSampleInterval"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="sampleInterval"
+                      Value="[SAMPLEINTERVAL]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter[\[]@sampleInterval[\]]"/>
+      </Component>
       
+      <Component Id="ConfigureDimensionName" Guid="7F2115A8-99C7-3BE1-6667-6BCA4195D223">
+        <CreateFolder/>
+        <util:XmlFile Id="SetDimensionName"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="name"
+                      Value="[DIMENSIONNAME]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter/defaultDimensions/defaultDimension[\[]@name[\]]"/>
+      </Component>
+      
+      <Component Id="ConfigureDimensionValue" Guid="7F2765A8-74E7-3211-2247-5AAA4195D117">
+        <CreateFolder/>
+        <util:XmlFile Id="SetDimensionValue"
+                      File="[INSTALLFOLDER]/$(var.PerfCounterReporter.TargetFileName).config"
+                      Action="setValue"
+                      SelectionLanguage="XPath"
+                      Name="value"
+                      Value="[DIMENSIONVALUE]"
+                      PreserveModifiedDate="yes"
+                      ElementPath="//configuration/signalFxReporter/defaultDimensions/defaultDimension[\[]@value[\]]"/>
+      </Component>
+        
       <Component Id="MainExecutable" Guid="a8c4dfc7-2f81-47b9-a6f7-f0cb3e0e5c84" >
         <File Id="ServiceExe"
               Source="$(var.PerfCounterReporter.TargetPath)"

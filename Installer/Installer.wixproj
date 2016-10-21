@@ -21,6 +21,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>
     </DefineConstants>
+    <WixVariables />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="counter_configs.wxs" />
