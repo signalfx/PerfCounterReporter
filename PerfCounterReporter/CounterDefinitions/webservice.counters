@@ -53,3 +53,7 @@
 
 # Rate of ISAPI extension request processed simultaneously by the web service
 # \web service(*)\isapi extension requests/sec
+
+## Process
+# The total number of handles currently open by this process. This number is equal to the sum of the handles currently open by each thread in this process.
+\Process(w3wp)\Handle Count
