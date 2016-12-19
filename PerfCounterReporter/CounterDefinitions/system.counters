@@ -17,11 +17,11 @@
 \System\Processor Queue Length
 
 # This is the number of system calls being serviced by the CPU per second.
-# By comparing the Processor’s Interrupts/sec with the System Calls/sec we can
+# By comparing the Processor's Interrupts/sec with the System Calls/sec we can
 # get a picture of how much effort the system requires to respond to attached hardware.
 # On a healthy system, the Interrupts per second should be negligible in comparison to
 # the number of System Calls per second. When the system has to repeatedly call
-# interrupts for service, it’s indicative of a hardware failure.
+# interrupts for service, it's indicative of a hardware failure.
 \System\System Calls/sec
 
 #Number of execution contexts switched in the last second, where >6000 is poor, 
@@ -81,14 +81,30 @@
 \PhysicalDisk(*)\Avg. Disk sec/Read
 
 #The number of bytes sent and received over a specific network adapter, including
-# framing characters. Be sure to record the throughput of your SQL Server’s NIC 
-#card(s).  Watch for this value possibly exceeding the NIC’s specifications, 
+# framing characters. Be sure to record the throughput of your SQL Serverss NIC 
+#card(s).  Watch for this value possibly exceeding the NICss specifications, 
 #especially when conducting large and/or multiple backups or copies to network drives.  
 #A high-speed network and/or a NIC dedicated to admin processes often alleviates this 
-#bottleneck. This counter is a sum of “Network Interface\\Bytes Received/sec” and 
-#“Network Interface\\Bytes Sent/sec”.  In some situations, you may wish to determine 
+#bottleneck. This counter is a sum of `Network Interface\\Bytes Received/sec` and 
+#`Network Interface\\Bytes Sent/sec`.  In some situations, you may wish to determine 
 #both inbound and outbound network traffic separately
 \Network Interface(*)\Bytes Total/sec
+
+# Bytes Received/sec is the rate at which bytes are received over each network adapter, 
+# including framing characters. Network Interface\Bytes Received/sec is a subset of 
+# Network Interface\Bytes Total/sec.
+\Network Interface(*)\Bytes Received/sec
+
+# Bytes Sent/sec is the rate at which bytes are sent over each network adapter, 
+# including framing characters. Network Interface\Bytes Sent/sec is a subset of 
+# Network Interface\Bytes Total/sec.
+\Network Interface(*)\Bytes Sent/sec
+
+# Current Bandwidth is an estimate of the current bandwidth of the network 
+# interface in bits per second (BPS).  For interfaces that do not vary in 
+# bandwidth or for those where no accurate estimation can be made, this value 
+# is the nominal bandwidth.
+\Network Interface(*)\Current Bandwidth
 
 \LogicalDisk(*)\Free Megabytes
 \LogicalDisk(*)\% Free Space
