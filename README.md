@@ -10,7 +10,7 @@ This code is based on/inspired by PerfTap (https://github.com/Iristyle/PerfTap) 
 * Administrator rights for installing services (the service is installed to run as LOCAL SERVICE)
 
 ### Installation and Configuration Steps
-Download the latest release of the .MSI from the [PerfCounterReporter Releases Page](https://github.com/signalfx/PerfCounterReporter/releases).
+Download the latest release of the .MSI from the [PerfCounterReporter Releases Page](https://github.com/signalfx/PerfCounterReporter/releases). (**NOTE:** As of the 1.6 release, PerfCounterReporter is only being provided as a 64-bit executable. If for some reason you require a 32-bit version of PerfCounterReporter you should use the 1.5.2 release).
 
 Launch the .MSI via your preferred invocation method.
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfCounterReporter", "PerfCounterReporter\PerfCounterReporter.csproj", "{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}"
 EndProject
@@ -51,8 +51,8 @@ Global
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release|x86.ActiveCfg = Release|Any CPU
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Any CPU.ActiveCfg = Release|x64
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Any CPU.Build.0 = Release|x64
-		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Mixed Platforms.ActiveCfg = Release-64|Any CPU
-		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Mixed Platforms.Build.0 = Release-64|Any CPU
+		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Mixed Platforms.ActiveCfg = Release-64|x64
+		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|Mixed Platforms.Build.0 = Release-64|x64
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|x64.ActiveCfg = Release|Any CPU
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|x64.Build.0 = Release|Any CPU
 		{A2044707-5BB7-4BE6-8758-362B7B3AB5A9}.Release-64|x86.ActiveCfg = Release-64|Any CPU
@@ -72,8 +72,8 @@ Global
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release|x86.ActiveCfg = Release|Any CPU
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Any CPU.ActiveCfg = Release|x64
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Any CPU.Build.0 = Release|x64
-		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Mixed Platforms.ActiveCfg = Release-64|Any CPU
-		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Mixed Platforms.Build.0 = Release-64|Any CPU
+		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Mixed Platforms.ActiveCfg = Release-64|x64
+		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|Mixed Platforms.Build.0 = Release-64|x64
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|x64.ActiveCfg = Release-64|Any CPU
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|x64.Build.0 = Release-64|Any CPU
 		{0385EB72-B6E9-45CD-B037-4A548C440E7F}.Release-64|x86.ActiveCfg = Release-64|Any CPU
@@ -110,8 +110,8 @@ Global
 		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release|x86.ActiveCfg = Release|Any CPU
 		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Any CPU.ActiveCfg = Release|Any CPU
 		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Any CPU.Build.0 = Release|Any CPU
-		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Mixed Platforms.Build.0 = Release|Any CPU
+		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Mixed Platforms.ActiveCfg = Release|x64
+		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|Mixed Platforms.Build.0 = Release|x64
 		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|x64.ActiveCfg = Release|Any CPU
 		{65072E9B-92AD-442E-AE54-1104FA517B7D}.Release-64|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
