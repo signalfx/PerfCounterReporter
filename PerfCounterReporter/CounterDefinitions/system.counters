@@ -128,7 +128,7 @@
 
 # Measuring the number of packet errors is an important factor in network health. If
 # there is a large spike in network errors, it usually means that your network is not
-# performing a peak health and needs further exploration. A small number of errors
+# performing at peak health and needs further exploration. A small number of errors
 # is usually exceptable.
 \Network Interface(*)\Packets Received Errors
 \Network Interface(*)\Packets Outbound Errors
