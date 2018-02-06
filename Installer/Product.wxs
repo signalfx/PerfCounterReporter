@@ -11,7 +11,7 @@ after re-generating add:
   <Product Id="b950aa29-c95e-4abb-82f5-37e52bbfa653" 
            Name="PerfCounterReporter" 
            Language="1033"            
-           Version="1.5.1.0" 
+           Version="1.6.2.0" 
            Manufacturer="SignalFx" 
            UpgradeCode="f25124eb-0654-4fe5-b5c9-2d1b8e1b8815">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" AdminImage="yes" />
@@ -223,6 +223,9 @@ after re-generating add:
                         ErrorControl="normal"
                         Interactive="no"
                         Vital="yes">
+                        <util:ServiceConfig
+                            FirstFailureActionType="restart" SecondFailureActionType="restart" 
+                            ThirdFailureActionType="restart" RestartServiceDelayInSeconds="300" /> 
         </ServiceInstall>
         <ServiceControl Id="StartService"
                         Start="install"
